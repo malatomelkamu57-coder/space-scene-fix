@@ -263,7 +263,7 @@ export default function Dashboard() {
 
     <main className="void-bg relative h-[100dvh] w-full overflow-hidden text-foreground">
       {/* FULL-BLEED 3D VIEWPORT */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-auto">
         <ClientOnly fallback={<ViewportFallback />}>
           <Suspense fallback={<ViewportFallback />}>
             <CelestialScene

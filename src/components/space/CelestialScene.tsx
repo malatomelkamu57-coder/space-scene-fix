@@ -1,6 +1,6 @@
 import { useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import {
   AmbientLight,
@@ -1234,19 +1234,21 @@ export default function CelestialScene(props: SceneProps) {
         />
       )}
 
-      <DeepSpace
-        showLabels={starLabels}
-        showConstellations={constellations}
-        selectedId={selectedSkyId}
-        onSelect={(id) => onSkySelect?.(id)}
-      />
-      <BodyRig
-        {...props}
-        sunDir={sunDir}
-        onAssetPosition={(id, pos) => {
-          positions.current[id] = pos;
-        }}
-      />
+      <Suspense fallback={null}>
+        <DeepSpace
+          showLabels={starLabels}
+          showConstellations={constellations}
+          selectedId={selectedSkyId}
+          onSelect={(id) => onSkySelect?.(id)}
+        />
+        <BodyRig
+          {...props}
+          sunDir={sunDir}
+          onAssetPosition={(id, pos) => {
+            positions.current[id] = pos;
+          }}
+        />
+      </Suspense>
       <CameraRig
         body={body}
         rideAlong={rideAlong}
