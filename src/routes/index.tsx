@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Dashboard from "@/components/space/Dashboard";
+import { I18nProvider } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,5 +26,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return <Dashboard />;
+  return (
+    <I18nProvider>
+      <Dashboard />
+    </I18nProvider>
+  );
 }
+
