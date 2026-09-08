@@ -167,7 +167,7 @@ function EarthSurface({
         <SphereGeometry args={[r * 1.012, 64, 64]} />
         <MeshStandardMaterial map={clouds} transparent opacity={0.32} depthWrite={false} />
       </Mesh>
-      <Atmosphere radius={r * 1.07} color="#4da6ff" />
+      <Atmosphere radius={r * 1.03} color="#4da6ff" strength={0.2} sunDir={sunDir} />
     </Group>
   );
 }
@@ -175,14 +175,13 @@ function EarthSurface({
 /* ---------------- Atmospheric Fresnel shell ---------------- */
 
 /**
- * Thin atmospheric shell. Physically this is a few-km haze layer, so it stays
- * faint (strength <= 0.12 by default) and only brightens where sunlight
- * actually grazes the limb — no neon outline on the night side.
+ * Thin atmospheric shell, held close to the limb so it reads as haze rather
+ * than an oversized halo.
  */
 function Atmosphere({
   radius,
   color,
-  strength = 0.1,
+  strength = 0.18,
   sunDir,
 }: {
   radius: number;
@@ -328,8 +327,7 @@ function GasGiantSurface({
         <SphereGeometry args={[info.radius, 128, 128]} />
         <ShaderMaterial vertexShader={gasVert} fragmentShader={gasFrag} uniforms={uniforms} />
       </Mesh>
-      <Atmosphere radius={info.radius * 1.035} color={info.accent} />
-      <Atmosphere radius={info.radius * 1.11} color={info.accent} />
+      <Atmosphere radius={info.radius * 1.03} color={info.accent} strength={0.2} sunDir={sunDir} />
     </Group>
   );
 }
@@ -518,7 +516,11 @@ function TexturedBody({ id, heat, terminator }: { id: BodyId; heat: number; term
           color={terminator < 0.5 ? "#ffffff" : "#e8eef7"}
         />
       </Mesh>
-      {(id === "Venus") && <Atmosphere radius={info.radius * 1.06} color={info.accent} />}
+      <Atmosphere
+        radius={info.radius * 1.03}
+        color={info.accent}
+        strength={id === "Venus" ? 0.22 : 0.16}
+      />
     </Group>
   );
 }
@@ -794,19 +796,32 @@ function CameraRig({
   positions: React.RefObject<Record<string, THREE.Vector3>>;
   controls: React.RefObject<{ target: THREE.Vector3; update: () => void } | null>;
 }) {
-  const { camera } = useThree();
-  const distTarget = useRef<number | null>(BODIES[body].radius * 3.4);
+  const { camera, size } = useThree();
+  const isMobile = size.width < 768;
+  const initialExtent = BODIES[body].ring?.outer ?? BODIES[body].radius;
+  const distTarget = useRef<number | null>(isMobile ? initialExtent * 5.2 : BODIES[body].radius * 3.4);
   const recenter = useRef(true);
   const focusPoint = useRef(new THREE.Vector3());
   const tmp = useRef(new THREE.Vector3());
   const zero = useRef(new THREE.Vector3());
 
   useEffect(() => {
-    const r = BODIES[body].radius;
-    distTarget.current = rideAlong ? r * 1.55 : r * 3.4;
+    const info = BODIES[body];
+    const framingExtent = info.ring?.outer ?? info.radius;
+    distTarget.current = rideAlong
+      ? info.radius * (isMobile ? 2.1 : 1.55)
+      : isMobile
+        ? framingExtent * 5.2
+        : info.radius * 3.4;
     recenter.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [body, rideAlong]);
+  }, [body, rideAlong, isMobile]);
+
+  useEffect(() => {
+    if (!(camera instanceof THREE.PerspectiveCamera)) return;
+    camera.fov = isMobile ? 50 : 45;
+    camera.updateProjectionMatrix();
+  }, [camera, isMobile]);
 
 
   // Floating +/- buttons: step the orbit distance and let the frame loop lerp there.
