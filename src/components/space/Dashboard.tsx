@@ -302,10 +302,10 @@ export default function Dashboard() {
       <div className="pointer-events-none absolute inset-0 grid-overlay" aria-hidden />
 
       {/* FLOATING COMMAND BAR */}
-      <header className={`pointer-events-none absolute inset-x-4 top-4 z-40 flex justify-center ${hud}`}>
+      <header className={`pointer-events-none absolute inset-x-2 top-[calc(env(safe-area-inset-top)+0.5rem)] z-40 flex justify-center sm:inset-x-4 sm:top-[calc(env(safe-area-inset-top)+1rem)] ${hud}`}>
 
-        <div className="glass pointer-events-auto flex w-full max-w-[1600px] items-center gap-4 px-4 py-2.5">
-          <OrbitalBrandHeader />
+        <div className="glass pointer-events-auto grid w-full max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:flex sm:gap-4 sm:px-4">
+          <OrbitalBrandHeader className="min-w-0 [&>span]:hidden min-[390px]:[&>span]:inline" />
 
           <nav
             aria-label="Celestial bodies"
@@ -331,7 +331,7 @@ export default function Dashboard() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2 md:gap-3">
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
             <div className="hidden flex-col items-end sm:flex">
               <span className="hud-eyebrow leading-none">Mission clock</span>
               <b className="mt-1 font-mono text-[12px] font-medium tracking-[0.12em] text-foreground">
@@ -392,14 +392,14 @@ export default function Dashboard() {
       </header>
 
       {/* DASHBOARD SUMMARY — slim collapsible status pill, expands into a floating popover */}
-      <div className={`pointer-events-none absolute inset-x-3 top-[74px] z-40 flex justify-center md:inset-x-4 md:top-[80px] ${hud}`}>
+      <div className={`pointer-events-none absolute inset-x-3 top-[calc(env(safe-area-inset-top)+4.5rem)] z-40 flex justify-center md:inset-x-4 md:top-[calc(env(safe-area-inset-top)+5rem)] ${hud}`}>
         <StatusStrip issLive={iss?.source === "live"} onOpenView={(viewKey) => setIntelligence(viewKey)} />
       </div>
 
 
 
       {/* LEFT TELEMETRY CARD */}
-      <div className={`absolute left-3 top-[116px] z-30 flex w-[262px] max-w-[calc(100vw-1.5rem)] flex-col items-start gap-2 md:left-4 md:top-[124px] ${hud}`}>
+      <div className={`absolute left-3 top-[calc(env(safe-area-inset-top)+9.5rem)] z-30 flex w-[262px] max-w-[calc(100vw-1.5rem)] flex-col items-start gap-2 md:left-4 md:top-[124px] ${hud}`}>
         <button
           onClick={() => {
             setTelemetryOpen((v) => !v);
@@ -522,7 +522,7 @@ export default function Dashboard() {
       </div>
 
       {/* RIGHT LAYERS + GAZETTEER CARD */}
-      <div className={`absolute right-3 top-[116px] z-30 flex w-[274px] max-w-[calc(100vw-1.5rem)] flex-col items-end gap-2 md:right-4 md:top-[124px] ${hud}`}>
+      <div className={`absolute right-3 top-[calc(env(safe-area-inset-top)+9.5rem)] z-30 flex w-[274px] max-w-[calc(100vw-1.5rem)] flex-col items-end gap-2 md:right-4 md:top-[124px] ${hud}`}>
         <button
           onClick={() => {
             setLayersOpen((v) => !v);
@@ -843,7 +843,7 @@ export default function Dashboard() {
       </div>
 
       {/* BOTTOM TIME CONTROLLER */}
-      <footer className={`absolute inset-x-4 bottom-4 z-30 flex justify-center ${hud}`}>
+      <footer className={`absolute inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] z-30 flex justify-center sm:inset-x-4 sm:bottom-[calc(env(safe-area-inset-bottom)+1rem)] ${hud}`}>
         <div className="glass flex w-full max-w-[860px] flex-wrap items-center gap-3 px-4 py-2.5">
           <button
             onClick={() => setPlaying((v) => !v)}
@@ -1002,7 +1002,7 @@ export default function Dashboard() {
       {/* MOBILE / TABLET BODY SELECTOR — touch scrollable */}
       <nav
         aria-label="Celestial bodies"
-        className={`hud-scroll absolute inset-x-3 top-[108px] z-30 flex items-center gap-1.5 overflow-x-auto pb-1 lg:hidden ${hud}`}
+        className={`hud-scroll absolute inset-x-3 top-[calc(env(safe-area-inset-top)+6.75rem)] z-30 flex items-center gap-1.5 overflow-x-auto pb-1 lg:hidden ${hud}`}
       >
         <span className="glass flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 font-mono text-[10px] tracking-[0.12em] text-muted-foreground">
           <Activity size={11} className="text-signal" /> {trackedCount.toLocaleString()}
