@@ -129,6 +129,8 @@ export default function StatusStrip({
 
 function IntelCard({ card, onOpen }: { card: DashboardCard; onOpen: () => void }) {
   const Icon = CARD_ICON[card.id] ?? Activity;
+  const { t } = useI18n();
+  const label = card.id === "objects" ? t("objectsTracked") : card.label;
   return (
     <button
       onClick={onOpen}
@@ -136,7 +138,7 @@ function IntelCard({ card, onOpen }: { card: DashboardCard; onOpen: () => void }
     >
       <span className="flex w-full items-center gap-1.5">
         <Icon size={12} className="text-gold" />
-        <span className="hud-eyebrow truncate">{card.label}</span>
+        <span className="hud-eyebrow truncate">{label}</span>
         <span
           className={`ml-auto shrink-0 rounded-full border px-1.5 font-mono text-[8px] tracking-[0.1em] ${STATE_STYLE[card.state]}`}
         >
