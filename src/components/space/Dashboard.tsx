@@ -56,16 +56,19 @@ import GlobalSearch from "./GlobalSearch";
 import StatusStrip from "./StatusStrip";
 import { OrbitalBrandHeader } from "./OrbitalLogo";
 import { useIsMobile } from "@/hooks/use-mobile";
+import LanguageSelector from "./LanguageSelector";
+import { useI18n } from "@/lib/i18n";
 
 const CelestialScene = lazy(() => import("./CelestialScene"));
 
-const LAYER_META: { key: keyof SceneLayers; label: string; Icon: typeof MapPin }[] = [
-  { key: "terminator", label: "Sun / Terminator", Icon: Sun },
-  { key: "orbiters", label: "Orbits", Icon: Satellite },
-  { key: "craters", label: "Night Lights", Icon: CircleDot },
-  { key: "landingSites", label: "Surface Labels", Icon: MapPin },
-  { key: "temperature", label: "Thermal Map", Icon: Thermometer },
+const LAYER_META: { key: keyof SceneLayers; Icon: typeof MapPin }[] = [
+  { key: "terminator", Icon: Sun },
+  { key: "orbiters", Icon: Satellite },
+  { key: "craters", Icon: CircleDot },
+  { key: "landingSites", Icon: MapPin },
+  { key: "temperature", Icon: Thermometer },
 ];
+
 
 const SPEEDS = [1, 10, 100];
 
