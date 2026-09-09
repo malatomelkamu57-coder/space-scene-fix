@@ -2,6 +2,7 @@ import { Activity, AlertTriangle, ChevronDown, Database, Rocket, ShieldCheck, Su
 import { useEffect, useRef, useState } from "react";
 import { loadDashboardSummary, type DashboardCard, type DashboardSummary } from "@/services/space/summary";
 import type { DataState } from "@/lib/space-types";
+import { useI18n } from "@/lib/i18n";
 
 const STATE_STYLE: Record<DataState, string> = {
   LIVE: "border-signal/40 bg-signal/10 text-signal",
@@ -28,6 +29,7 @@ export default function StatusStrip({
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,14 +74,14 @@ export default function StatusStrip({
       >
         <span className="flex shrink-0 items-center gap-1.5 text-signal">
           <i className="pulse-dot size-1.5 rounded-full bg-signal" />
-          SYSTEM {failed ? "DEGRADED" : "ONLINE"}
+          {failed ? t("systemDegraded") : t("systemOnline")}
         </span>
         <span className="hidden h-3 w-px shrink-0 bg-white/10 sm:block" />
         <span className="hidden shrink-0 sm:inline">
           <b className="font-medium text-foreground/90">
             {summary ? `${summary.objectsTracked.toLocaleString()}+` : "——"}
           </b>{" "}
-          OBJECTS
+          {t("objects")}
         </span>
         <span className="hidden h-3 w-px shrink-0 bg-white/10 md:block" />
         <span className={`hidden shrink-0 rounded-full border px-2 py-0.5 text-[9px] md:inline ${STATE_STYLE[dataState]}`}>
@@ -127,6 +129,8 @@ export default function StatusStrip({
 
 function IntelCard({ card, onOpen }: { card: DashboardCard; onOpen: () => void }) {
   const Icon = CARD_ICON[card.id] ?? Activity;
+  const { t } = useI18n();
+  const label = card.id === "objects" ? t("objectsTracked") : card.label;
   return (
     <button
       onClick={onOpen}
@@ -134,7 +138,7 @@ function IntelCard({ card, onOpen }: { card: DashboardCard; onOpen: () => void }
     >
       <span className="flex w-full items-center gap-1.5">
         <Icon size={12} className="text-gold" />
-        <span className="hud-eyebrow truncate">{card.label}</span>
+        <span className="hud-eyebrow truncate">{label}</span>
         <span
           className={`ml-auto shrink-0 rounded-full border px-1.5 font-mono text-[8px] tracking-[0.1em] ${STATE_STYLE[card.state]}`}
         >
