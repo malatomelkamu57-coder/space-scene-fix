@@ -120,6 +120,7 @@ export default function Dashboard() {
   const [gazetteerOpen, setGazetteerOpen] = useState(true);
   const [profileOpen, setProfileOpen] = useState(true);
   const isMobile = useIsMobile();
+  const { t } = useI18n();
   /** Below lg the profile card docks as a bottom sheet behind a "Specs" pill. */
   const [isCompact, setIsCompact] = useState(false);
   const [telemetryOpen, setTelemetryOpen] = useState(true);
@@ -235,18 +236,18 @@ export default function Dashboard() {
   const telemetryRows =
     body === "Earth" && iss
       ? [
-          ["SUB-POINT LAT", `${Math.abs(iss.lat).toFixed(2)}° ${iss.lat >= 0 ? "N" : "S"}`],
-          ["SUB-POINT LON", `${Math.abs(iss.lon).toFixed(2)}° ${iss.lon >= 0 ? "E" : "W"}`],
-          ["VELOCITY", `${iss.velocityKms.toFixed(2)} km/s`],
-          ["ALTITUDE", `${iss.altitudeKm.toFixed(1)} km`],
-          ["ORBITAL PERIOD", "92.68 min"],
+          [t("latitude"), `${Math.abs(iss.lat).toFixed(2)}° ${iss.lat >= 0 ? "N" : "S"}`],
+          [t("longitude"), `${Math.abs(iss.lon).toFixed(2)}° ${iss.lon >= 0 ? "E" : "W"}`],
+          [t("velocity"), `${iss.velocityKms.toFixed(2)} km/s`],
+          [t("altitude"), `${iss.altitudeKm.toFixed(1)} km`],
+          [t("orbitalPeriod"), "92.68 min"],
         ]
       : [
-          ["SUB-POINT LAT", info.telemetry.lat],
-          ["SUB-POINT LON", info.telemetry.lon],
-          ["VELOCITY", `${info.telemetry.velocity} km/s`],
-          ["ALTITUDE", `${info.telemetry.altitude} km`],
-          ["ORBITAL PERIOD", `${info.telemetry.period} min`],
+          [t("latitude"), info.telemetry.lat],
+          [t("longitude"), info.telemetry.lon],
+          [t("velocity"), `${info.telemetry.velocity} km/s`],
+          [t("altitude"), `${info.telemetry.altitude} km`],
+          [t("orbitalPeriod"), `${info.telemetry.period} min`],
         ];
 
   /** Zen / Freedom mode fades every overlay out and hands the canvas full control. */
@@ -329,14 +330,14 @@ export default function Dashboard() {
                     className="absolute inset-0 rounded-full bg-gold shadow-[0_0_20px_rgba(245,166,35,0.35)]"
                   />
                 )}
-                <span className="relative z-10 font-medium">{id}</span>
+                <span className="relative z-10 font-medium">{t(id)}</span>
               </button>
             ))}
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
             <div className="hidden flex-col items-end sm:flex">
-              <span className="hud-eyebrow leading-none">Mission clock</span>
+              <span className="hud-eyebrow leading-none">{t("missionClock")}</span>
               <b className="mt-1 font-mono text-[12px] font-medium tracking-[0.12em] text-foreground">
                 {utc} <span className="text-muted-foreground">UTC</span>
               </b>
@@ -347,7 +348,7 @@ export default function Dashboard() {
               className="hidden items-center gap-2 rounded-full border border-signal/30 bg-signal/10 px-3 py-1.5 font-mono text-[11px] text-signal md:flex"
             >
               <i className="pulse-dot size-1.5 rounded-full bg-signal" />
-              {trackedCount.toLocaleString()} Tracked
+              {trackedCount.toLocaleString()} {t("tracked")}
             </span>
 
             <button
@@ -355,11 +356,13 @@ export default function Dashboard() {
               className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
             >
               <Search size={13} />
-              <span className="hidden sm:inline">Search</span>
+              <span className="hidden sm:inline">{t("search")}</span>
               <kbd className="hidden rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[9px] md:inline">
                 ⌘K
               </kbd>
             </button>
+
+            <LanguageSelector />
 
             <button
               aria-label={profileOpen ? "Hide body profile" : "Show body profile"}
@@ -415,7 +418,7 @@ export default function Dashboard() {
             <Gauge size={13} className="text-gold" />
             <i className="pulse-dot absolute -right-1 -top-1 size-1.5 rounded-full bg-gold shadow-[0_0_8px_var(--gold)]" />
           </span>
-          TELEMETRY
+          {t("telemetry")}
           {telemetryOpen ? <ChevronLeft size={13} /> : <ChevronRight size={13} />}
         </button>
         <motion.aside
@@ -428,9 +431,9 @@ export default function Dashboard() {
 
 
         <div className="flex items-center justify-between">
-          <span className="hud-eyebrow">Target telemetry</span>
+          <span className="hud-eyebrow">{t("targetTelemetry")}</span>
           <span className="flex items-center gap-1.5 font-mono text-[9px] tracking-[0.14em] text-signal">
-            <i className="pulse-dot size-1.5 rounded-full bg-signal" /> LIVE
+            <i className="pulse-dot size-1.5 rounded-full bg-signal" /> {t("live")}
           </span>
         </div>
 
@@ -439,7 +442,7 @@ export default function Dashboard() {
             className="size-2.5 rounded-full"
             style={{ background: info.accent, boxShadow: `0 0 12px ${info.accent}` }}
           />
-          <h2 className="text-[17px] font-semibold tracking-tight text-foreground">{body}</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-foreground">{t(body)}</h2>
           <span className="ml-auto font-mono text-[9px] text-muted-foreground">O-408</span>
         </div>
 
@@ -459,14 +462,14 @@ export default function Dashboard() {
           <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
             <div className="flex items-center justify-between">
               <span className="hud-eyebrow flex items-center gap-1.5">
-                <Satellite size={11} className="text-gold" /> ISS track
+                <Satellite size={11} className="text-gold" /> {t("issTrack")}
               </span>
               <b
                 className={`font-mono text-[9px] tracking-[0.1em] ${
                   iss.source === "live" ? "text-signal" : "text-gold"
                 }`}
               >
-                {iss.source === "live" ? "LIVE FEED" : "SGP4"}
+                {iss.source === "live" ? t("liveFeed") : "SGP4"}
               </b>
             </div>
             <p className="mt-2 text-[12px] leading-relaxed text-foreground/85">
@@ -535,7 +538,7 @@ export default function Dashboard() {
           className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/[0.1] bg-[oklch(0.09_0.016_265_/_0.8)] px-3 py-1.5 font-mono text-xs tracking-wider text-zinc-300 shadow-lg backdrop-blur-xl transition-all hover:border-gold/50 hover:text-white"
         >
           {layersOpen ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
-          LAYERS
+          {t("layers")}
           <span className="relative grid place-items-center">
             <LayersIcon size={13} className={`transition-transform ${layersOpen ? "text-gold" : "text-zinc-400"}`} />
             <i className="pulse-dot absolute -right-1 -top-1 size-1.5 rounded-full bg-gold shadow-[0_0_8px_var(--gold)]" />
@@ -551,14 +554,14 @@ export default function Dashboard() {
 
 
         <div className="flex items-center justify-between">
-          <span className="hud-eyebrow">Map layers</span>
+          <span className="hud-eyebrow">{t("mapLayers")}</span>
           <span className="font-mono text-[9px] tracking-[0.14em] text-muted-foreground">
             {Object.values(layers).filter(Boolean).length}/{LAYER_META.length}
           </span>
         </div>
 
         <div className="mt-3 space-y-1">
-          {LAYER_META.map(({ key, label, Icon }) => {
+          {LAYER_META.map(({ key, Icon }) => {
             const on = layers[key];
             return (
               <button
@@ -569,7 +572,7 @@ export default function Dashboard() {
                 className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[12px] transition-colors hover:bg-white/[0.04]"
               >
                 <Icon size={14} className={on ? "text-gold" : "text-muted-foreground"} />
-                <span className={on ? "text-foreground" : "text-muted-foreground"}>{label}</span>
+                <span className={on ? "text-foreground" : "text-muted-foreground"}>{t(key)}</span>
                 <span
                   className={`ml-auto flex h-4 w-7 items-center rounded-full p-0.5 transition-colors ${
                     on ? "bg-gold/80" : "bg-white/10"
@@ -591,7 +594,7 @@ export default function Dashboard() {
             onClick={() => setGazetteerOpen((v) => !v)}
             className="flex w-full items-center justify-between"
           >
-            <span className="hud-eyebrow">Surface gazetteer</span>
+            <span className="hud-eyebrow">{t("surfaceGazetteer")}</span>
             <ChevronDown
               size={14}
               className={`text-muted-foreground transition-transform ${gazetteerOpen ? "rotate-180" : ""}`}
@@ -630,7 +633,7 @@ export default function Dashboard() {
             onClick={() => setProfileOpen(true)}
             className="flex w-full items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-2 text-[12px] text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold"
           >
-            <Info size={14} className="text-gold" /> Body profile · {body}
+            <Info size={14} className="text-gold" /> Body profile · {t(body)}
           </button>
         </div>
 
@@ -1020,7 +1023,7 @@ export default function Dashboard() {
                 : "border-white/[0.08] bg-[oklch(0.09_0.016_265_/_0.75)] text-muted-foreground backdrop-blur-xl"
             }`}
           >
-            {id}
+            {t(id)}
           </button>
         ))}
       </nav>
