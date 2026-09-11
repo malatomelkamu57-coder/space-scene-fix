@@ -2,6 +2,7 @@ import { Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { groupResults, searchSpace } from "@/lib/space-intel";
 import type { SearchResult } from "@/lib/space-types";
+import { useI18n } from "@/lib/i18n";
 
 export default function GlobalSearch({
   onSelect,
@@ -12,6 +13,7 @@ export default function GlobalSearch({
 }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,7 +51,7 @@ export default function GlobalSearch({
               if (first) onSelect(first);
             }
           }}
-          placeholder="Search space objects, missions, planets…"
+          placeholder={`${t("search")}…`}
           className="w-full bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
         />
         {query && (
@@ -67,7 +69,7 @@ export default function GlobalSearch({
         <div className="hud-scroll mt-2 max-h-[52vh] w-full overflow-y-auto rounded-xl border border-white/[0.08] bg-[#090d16]/90 shadow-2xl backdrop-blur-2xl">
           {groups.length === 0 && (
             <p className="px-3 py-6 text-center font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
-              NO MATCHES IN CATALOG
+              {t("noSearchMatches")}
             </p>
           )}
           {groups.map(([category, items]) => (

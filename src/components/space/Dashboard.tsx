@@ -308,18 +308,20 @@ export default function Dashboard() {
       {/* FLOATING COMMAND BAR */}
       <header className={`pointer-events-none absolute inset-x-2 top-[calc(env(safe-area-inset-top)+0.5rem)] z-40 flex justify-center sm:inset-x-4 sm:top-[calc(env(safe-area-inset-top)+1rem)] ${hud}`}>
 
-        <div className="glass pointer-events-auto grid w-full max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:flex sm:gap-4 sm:px-4">
-          <OrbitalBrandHeader className="min-w-0 [&>span]:hidden min-[390px]:[&>span]:inline" />
+        <div className="glass pointer-events-auto flex w-full max-w-[1600px] flex-nowrap items-center px-3 py-2.5 sm:px-4">
+          <div className="flex shrink-0 items-center">
+            <OrbitalBrandHeader className="[&>span]:hidden min-[390px]:[&>span]:inline" />
+          </div>
 
           <nav
             aria-label="Celestial bodies"
-            className="hud-scroll mx-auto hidden items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.06] bg-white/[0.03] p-1 lg:flex"
+            className="scrollbar-none mx-3 hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-full border border-white/[0.06] bg-white/[0.03] p-1 lg:flex"
           >
             {BODY_IDS.map((id) => (
               <button
                 key={id}
                 onClick={() => selectBody(id)}
-                className={`relative rounded-full px-3 py-1.5 text-[11px] transition-colors ${
+                className={`relative shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] transition-colors ${
                   body === id ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -335,7 +337,7 @@ export default function Dashboard() {
             ))}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
+          <div className="ml-auto flex shrink-0 flex-nowrap items-center gap-2 md:gap-3">
             <div className="hidden flex-col items-end sm:flex">
               <span className="hud-eyebrow leading-none">{t("missionClock")}</span>
               <b className="mt-1 font-mono text-[12px] font-medium tracking-[0.12em] text-foreground">
@@ -853,14 +855,14 @@ export default function Dashboard() {
         <div className="glass flex w-full max-w-[860px] flex-wrap items-center gap-3 px-4 py-2.5">
           <button
             onClick={() => setPlaying((v) => !v)}
-            aria-label={playing ? "Pause simulation" : "Play simulation"}
+            aria-label={playing ? t("pauseSimulation") : t("playSimulation")}
             className="grid size-9 shrink-0 place-items-center rounded-full bg-gold text-primary-foreground transition-transform hover:scale-105"
           >
             {playing ? <Pause size={15} /> : <Play size={15} />}
           </button>
 
           <label className="flex min-w-[150px] flex-1 items-center gap-3">
-            <span className="sr-only">Timeline scrub</span>
+            <span className="sr-only">{t("timelineScrub")}</span>
             <input
               type="range"
               min={0}
@@ -889,7 +891,7 @@ export default function Dashboard() {
                   speed === s ? "bg-gold text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {s}x
+                {t(`speed${s}`)}
               </button>
             ))}
           </div>
@@ -903,7 +905,7 @@ export default function Dashboard() {
               live ? "border-signal/40 bg-signal/10 text-signal" : "border-white/10 text-muted-foreground"
             }`}
           >
-            {live ? <LockKeyhole size={11} /> : <Unlock size={11} />} {live ? "LIVE" : "SCRUB"}
+            {live ? <LockKeyhole size={11} /> : <Unlock size={11} />} {live ? t("live") : t("scrub")}
           </button>
 
           <span className="hidden items-center gap-1.5 font-mono text-[10px] tracking-[0.1em] text-muted-foreground lg:flex">
@@ -975,7 +977,7 @@ export default function Dashboard() {
                           }}
                           className="group flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-[13px] text-muted-foreground transition-colors hover:bg-white/[0.04] hover:text-foreground"
                         >
-                          {item}
+                          {isBody ? t(item) : item}
                           <span className="font-mono text-[10px] text-gold/0 transition-colors group-hover:text-gold">
                             {isBody ? "◉" : "↗"}
                           </span>
@@ -1023,7 +1025,7 @@ export default function Dashboard() {
                 : "border-white/[0.08] bg-[oklch(0.09_0.016_265_/_0.75)] text-muted-foreground backdrop-blur-xl"
             }`}
           >
-            {t(id)}
+            <span className="whitespace-nowrap">{t(id)}</span>
           </button>
         ))}
       </nav>
