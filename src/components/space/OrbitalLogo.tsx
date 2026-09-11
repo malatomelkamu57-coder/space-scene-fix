@@ -76,7 +76,7 @@ export function OrbitalLogo({ className = "size-[26px]" }: { className?: string 
 
 export function OrbitalBrandHeader({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex items-center gap-2.5 whitespace-nowrap ${className}`}>
+    <div className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap ${className}`}>
       <OrbitalLogo />
       <span className="font-mono text-[11px] font-medium uppercase tracking-[0.2em]">
         <span className="text-zinc-200">ORBITAL </span>
